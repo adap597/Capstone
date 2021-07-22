@@ -7,7 +7,7 @@ import sys
 from flask_migrate import Migrate
 
 
-database_filename = "Casting"
+database_filename = "casting"
 project_dir = os.path.dirname(os.path.abspath(__file__))
 database_path = "postgresql:///{}".format(database_filename)
 db = SQLAlchemy()
