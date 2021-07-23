@@ -8,13 +8,9 @@ from config import bearer_tokens
 from sqlalchemy import desc
 from datetime import date
 
-casting_assistant_auth_header = {
-    'Authorization': bearer_tokens['casting_assistant']
-}
+casting_assistant_auth_header = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MGI1NjNmNTk2ZmM3MzAwNjk0M2M3NDYiLCJhdWQiOiJDYXN0aW5nIFNlcnZpY2UiLCJpYXQiOjE2MjcwNzk0NzEsImV4cCI6MTYyNzA4NjY3MSwiYXpwIjoibkJFZ2x4bERTTnRrVzMzcFZ1TnlGWXBYaFBkejZQekciLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImdldDphY3RvcnMiLCJnZXQ6bW92aWVzIl19.BU0cPoISYvcIjO717D_A2cEFuUGm2DZkIAlZoLmYo3P4fPJd-v4p8lJUjh6vEN64HnNu7awfpP-slxKVfOzxD3HKv021U42MizHcpUU__HiMdrY0gbtzYby4EIadaxgu0IXemN84w6uhAsX2CUagVUAiMWoLod4SC-_cB8Xubk4pYXs7AXQ3xmSrYx9s_hb350etRtDDvd1dcsNr3YYOTEybULKGhXszrUNLmSLFfgQbWDKkKSyFyeLaDYNvtxEtKLPaYFQrGC3OLD-SH1Bn0f4KgoN6qmrIXDowhZqF3HEUyWPv2M6hwJu_pjF9Y5igCGTR5EPfr2GS68qW5FDDSg'
 
-casting_director_auth_header = {
-    'Authorization': bearer_tokens['casting_director']
-}
+casting_director_auth_header = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MGJkNGExZWQwMmY2NTAwNjk1YWFiMGMiLCJhdWQiOiJDYXN0aW5nIFNlcnZpY2UiLCJpYXQiOjE2MjcwNzk2ODMsImV4cCI6MTYyNzA4Njg4MywiYXpwIjoibkJFZ2x4bERTTnRrVzMzcFZ1TnlGWXBYaFBkejZQekciLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBvc3Q6YWN0b3JzIl19.aEUC_A6-yh6ngg_onx97B43nArdDLiq5DlH8U7KHwx9j-S83OCoE9dP6JJlLE-gWWW4NUuSCXZruBFrsyNiz_fsO_fvNUQ7uQZi8rK8e0jkiCmCX4lFG853qyb3eDInET5FiehhS1EwcGOrVmKLlZ0Csvtn1b37fzoqGmhuEKcJZNjh_jrVTXe0BL1pHID6Cg4X9DLP9cwOW9BRUM-0o0lVsGCkxAtFojx4ovnY1RAm-arborcjM8NtX131WXVwVHWC1If6oN0IEZNE7I-hQ5xl9C-QYZPZfm_OLjjh8K2mWK5jyyYhMSlPA8jqm8diSLAtU5BwoWfQjykGp1IL1tA'
 
 executive_producer_auth_header = {
     'Authorization': bearer_tokens['executive_producer']
@@ -42,7 +38,7 @@ class CastingTest(unittest.TestCase):
 
     # Retrieve movies with authorization
     def test_retrieve_movies(self):
-        res = self.client().get('/movies?page=1', headers = casting_assistant_auth_header)
+        res = self.client().get('/movies?page=1', headers ={'Authorization': 'Bearer' +  casting_assistant_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -71,7 +67,7 @@ class CastingTest(unittest.TestCase):
 
     # Retreive actors with authorization
     def test_retrieve_actors(self):
-        res = self.client().get('actors?page=1', headers = casting_assistant_auth_header)
+        res = self.client().get('actors?page=1', headers ={'Authorization': 'Bearer' +  casting_assistant_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -88,7 +84,7 @@ class CastingTest(unittest.TestCase):
 
     #Retrieve actors error test - no actors in database
     def test_retreive_actors_404(self):
-        res = self.client().get('actors?page=5000', headers = casting_assistant_auth_header)
+        res = self.client().get('actors?page=5000', headers ={'Authorization': 'Bearer' +  casting_assistant_auth_header})
         data = json.loads(res.data)
     
         self.assertEqual(res.status_code, 404)
@@ -105,7 +101,7 @@ class CastingTest(unittest.TestCase):
             'gender': 'male'
         }
         
-        res = self.client().post('/actors', json=json_new_actor, headers = casting_director_auth_header)
+        res = self.client().post('/actors', json=json_new_actor, headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
         
         self.assertEqual(res.status_code, 200)
@@ -135,7 +131,7 @@ class CastingTest(unittest.TestCase):
             'gender': 'male',
         }
 
-        res = self.client().post('/actors', json=json_new_actor, headers = casting_director_auth_header)
+        res = self.client().post('/actors', json=json_new_actor, headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -148,7 +144,7 @@ class CastingTest(unittest.TestCase):
             'name': 'Idris Albo'
         }
 
-        res = self.client().patch('/actors/1', json = json_patch_actor_name, headers = casting_director_auth_header)
+        res = self.client().patch('/actors/1', json = json_patch_actor_name, headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -175,7 +171,7 @@ class CastingTest(unittest.TestCase):
             'age': '55'
         }
 
-        res = self.client().patch('/actors/50000', json = json_patch_actor_404, headers = casting_director_auth_header)
+        res = self.client().patch('/actors/50000', json = json_patch_actor_404, headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -185,7 +181,7 @@ class CastingTest(unittest.TestCase):
 
     #delete actor with auth and permissions
     def test_delete_actor_with_auth(self):
-        res = self.client().delete('/actors/1', headers = casting_director_auth_header)
+        res = self.client().delete('/actors/1', headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -194,7 +190,7 @@ class CastingTest(unittest.TestCase):
     
     #delete actor with missing permissions
     def test_delete_actor_no_permission(self):
-        res = self.client().delete('/actors/1', headers = casting_assistant_auth_header)
+        res = self.client().delete('/actors/1', headers ={'Authorization': 'Bearer' +  casting_assistant_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -203,7 +199,7 @@ class CastingTest(unittest.TestCase):
 
     #delete actor not in database error
     def test_delete_actor_404(self):
-        res = self.client().delete('/actors/500000', headers = casting_director_auth_header)
+        res = self.client().delete('/actors/500000', headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -246,7 +242,7 @@ class CastingTest(unittest.TestCase):
             'release_date': date.today()
         }
 
-        res = self.client().post('/movies', json = json_insert_movie, headers = casting_director_auth_header)
+        res = self.client().post('/movies', json = json_insert_movie, headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -300,7 +296,7 @@ class CastingTest(unittest.TestCase):
             'title': 'Castaway 3'
         }
 
-        res = self.client().patch('/movies/2', json = json_patch_movie, headers = casting_assistant_auth_header)
+        res = self.client().patch('/movies/2', json = json_patch_movie, headers ={'Authorization': 'Bearer' +  casting_assistant_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -340,7 +336,7 @@ class CastingTest(unittest.TestCase):
 
     #delete movie no permissions
     def test_delete_movie_no_permission(self):
-        res = self.client().delete('/movies/2', headers = casting_director_auth_header)
+        res = self.client().delete('/movies/2', headers ={'Authorization': 'Bearer' + casting_director_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
