@@ -12,9 +12,7 @@ casting_assistant_auth_header = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5
 
 casting_director_auth_header = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MGJkNGExZWQwMmY2NTAwNjk1YWFiMGMiLCJhdWQiOiJDYXN0aW5nIFNlcnZpY2UiLCJpYXQiOjE2MjcwNzk2ODMsImV4cCI6MTYyNzA4Njg4MywiYXpwIjoibkJFZ2x4bERTTnRrVzMzcFZ1TnlGWXBYaFBkejZQekciLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbImRlbGV0ZTphY3RvcnMiLCJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyIsInBhdGNoOmFjdG9ycyIsInBhdGNoOm1vdmllcyIsInBvc3Q6YWN0b3JzIl19.aEUC_A6-yh6ngg_onx97B43nArdDLiq5DlH8U7KHwx9j-S83OCoE9dP6JJlLE-gWWW4NUuSCXZruBFrsyNiz_fsO_fvNUQ7uQZi8rK8e0jkiCmCX4lFG853qyb3eDInET5FiehhS1EwcGOrVmKLlZ0Csvtn1b37fzoqGmhuEKcJZNjh_jrVTXe0BL1pHID6Cg4X9DLP9cwOW9BRUM-0o0lVsGCkxAtFojx4ovnY1RAm-arborcjM8NtX131WXVwVHWC1If6oN0IEZNE7I-hQ5xl9C-QYZPZfm_OLjjh8K2mWK5jyyYhMSlPA8jqm8diSLAtU5BwoWfQjykGp1IL1tA'
 
-executive_producer_auth_header = {
-    'Authorization': bearer_tokens['executive_producer']
-}
+executive_producer_auth_header = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwODI2MzYzNDUzNjk5MDQwNzUwNCIsImF1ZCI6IkNhc3RpbmciLCJpYXQiOjE2MjcwODM1MzQsImV4cCI6MTYyNzA5MDczNCwiYXpwIjoibkJFZ2x4bERTTnRrVzMzcFZ1TnlGWXBYaFBkejZQekciLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbXX0.ThTbmKYTxyHAVqMzIYnaULWywaTFIXHgmdkmpHBA9AQoCFdlfJCt2DoHpidjO2BxxkjeaKtA_M4m7DUMg93ecfau1ZppGuS7ThDdBjNc5Gy8dRdBKL99ZNzZ1HMq1-Egs0TnIIGiJMtnId-ihJJQr2c3hBx5SmuA6EoM9gsHOFWGguUWheOhJry1lMz9ifpx3jN6xtdcwU8YPARO3HFOTj1c-f99W729g50aIjNy9hVOyiLRCN8d0o6HNHwLq6dvEWovwYuh3AOO-KdDFFzcgSNcK1ddx0KCm5Iy_Ddk_udPJQFlc86L72wIX6xhhXhx2uqgvW2gH45iq2l2enU1FA'
 
 class CastingTest(unittest.TestCase):
 
@@ -214,7 +212,7 @@ class CastingTest(unittest.TestCase):
             'release_date': date.today()
         }
 
-        res = self.client().post('/movies', json = json_insert_movie, headers = executive_producer_auth_header)
+        res = self.client().post('/movies', json = json_insert_movie, headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -256,7 +254,7 @@ class CastingTest(unittest.TestCase):
             'release_date': date.today()
         }
         
-        res = self.client().post('/movies', json = json_insert_movie, headers = executive_producer_auth_header)
+        res = self.client().post('/movies', json = json_insert_movie, headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -270,7 +268,7 @@ class CastingTest(unittest.TestCase):
             'title': 'Castaway 3'
         }
 
-        res = self.client().patch('/movies/2', json = json_patch_movie, headers = executive_producer_auth_header)
+        res = self.client().patch('/movies/2', json = json_patch_movie, headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -309,7 +307,7 @@ class CastingTest(unittest.TestCase):
             'title': 'Castaway 4'
         }
 
-        res = self.client().patch('/movies/5000000', json = json_patch_movie, headers = executive_producer_auth_header)
+        res = self.client().patch('/movies/5000000', json = json_patch_movie, headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -318,7 +316,7 @@ class CastingTest(unittest.TestCase):
 
     #delete movie with authorization
     def test_delete_movie_with_auth(self):
-        res = self.client().delete('/movies/2', headers = executive_producer_auth_header)
+        res = self.client().delete('/movies/2', headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -345,7 +343,7 @@ class CastingTest(unittest.TestCase):
 
     #delete movie 404 
     def test_delete_movie_404(self):
-        res = self.client().delete('/movies/500000', headers = executive_producer_auth_header)
+        res = self.client().delete('/movies/500000', headers ={'Authorization': 'Bearer' + executive_producer_auth_header})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)

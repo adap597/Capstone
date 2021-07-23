@@ -6,7 +6,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
-from auth.auth import requires_auth, AuthError
+from auth import requires_auth, AuthError
 
 def create_app(test_config=None):
   # create and configure the app
@@ -285,7 +285,7 @@ def create_app(test_config=None):
   return app
 
 
-#app = create_app()
+app = create_app()
 
-#if __name__ == '__main__':
-    #app.run(host='0.0.0.0', port=8080, debug=True)
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8080, debug=True)
