@@ -117,7 +117,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().post('/actors', json=json_new_actor,
                                  headers={'Authorization': 'Bearer' +
-                                            casting_director_token})
+                                          casting_director_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -145,7 +145,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().post('/actors', json=json_new_actor,
                                  headers={'Authorization': 'Bearer' +
-                                         casting_director_token})
+                                          casting_director_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -160,7 +160,7 @@ class CastingTest(unittest.TestCase):
         res = self.client().patch('/actors/1',
                                   json=json_patch_actor_name,
                                   headers={'Authorization': 'Bearer' +
-                                            casting_director_token})
+                                           casting_director_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -190,7 +190,7 @@ class CastingTest(unittest.TestCase):
         res = self.client().patch('/actors/50000',
                                   json=json_patch_actor_404,
                                   headers={'Authorization': 'Bearer' +
-                                            casting_director_token})
+                                           casting_director_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
@@ -242,7 +242,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().post('/movies', json=json_insert_movie,
                                  headers={'Authorization': 'Bearer' +
-                                            executive_producer_token})
+                                          executive_producer_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -271,7 +271,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().post('/movies', json=json_insert_movie,
                                  headers={'Authorization': 'Bearer' +
-                                            casting_director_token})
+                                          casting_director_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -286,7 +286,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().post('/movies', json=json_insert_movie,
                                  headers={'Authorization': 'Bearer' +
-                                            executive_producer_token})
+                                          executive_producer_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
@@ -300,7 +300,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().patch('/movies/2', json=json_patch_movie,
                                   headers={'Authorization': 'Bearer' +
-                                            executive_producer_token})
+                                           executive_producer_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -327,7 +327,7 @@ class CastingTest(unittest.TestCase):
 
         res = self.client().patch('/movies/2', json=json_patch_movie,
                                   headers={'Authorization': 'Bearer' +
-                                            casting_assistant_token})
+                                           casting_assistant_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
@@ -342,7 +342,7 @@ class CastingTest(unittest.TestCase):
         res = self.client().patch('/movies/5000000',
                                   json=json_patch_movie,
                                   headers={'Authorization': 'Bearer' +
-                                            executive_producer_token})
+                                           executive_producer_token})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
