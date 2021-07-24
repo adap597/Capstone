@@ -19,7 +19,7 @@ class CastingTest(unittest.TestCase):
         self.app = create_app()
         self.client = self.app.test_client
         self.database_name = "casting_test"
-        self.database_path = "postgresql://postgres:postgres@localhost:5432/casting_test"
+        self.database_path = "postgresql://adap194567:postgres@localhost:5432/casting_test"
         setup_db(self.app, self.database_path)
 
         with self.app.app_context():
@@ -39,7 +39,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.asserTrue(data['success'])
+        self.asserEqual(data['success'], True)
         self.assertTrue(len(data['movies']) > 0)
 
     #Retrieve movies with no authorization
@@ -48,7 +48,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header is missing')
     
     #Retrieve movies error test - no movies
@@ -57,7 +57,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'No movies found')
 
     #Retreive Actors tests
@@ -68,7 +68,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
 
     # Retrieve actors without authorization
     def test_retrieve_actors_no_auth(self):
@@ -76,7 +76,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header is missing')
 
     #Retrieve actors error test - no actors in database
@@ -85,7 +85,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
     
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'no actors found')
 
     #Insert actors tests
@@ -102,7 +102,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
         
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqua(data['success'], True)
         self.assertEqual(data['created'], 1)
     
     #Insert actor no authorization
@@ -117,7 +117,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
         
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header is missing')
 
     #insert actor missing form data
@@ -132,7 +132,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Name field is blank')
 
     #patch actor with auth
@@ -145,7 +145,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.asserTrue(len(data['actor'])> 0)
         self.assertEqual(data['updated'], 1)
 
@@ -159,7 +159,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization Header is missing')
     
     #patch actor no actor in database
@@ -172,7 +172,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Invalid actor Id - actor not found')
 
 
@@ -182,7 +182,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted'], '1')
     
     #delete actor with missing permissions
@@ -191,7 +191,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Permissions missing')
 
     #delete actor not in database error
@@ -200,7 +200,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Actor not found in database' )
         
 
@@ -215,7 +215,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.assertEqual(data['created'], 2)
 
     #insert movie no auth
@@ -229,7 +229,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
         
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header missing')
 
     #insert movie missing permissions
@@ -243,7 +243,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header missing')
 
     #insert movie missing form data
@@ -257,7 +257,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Title field is blank')
 
     #patch movie with auth
@@ -271,7 +271,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.assertEqual(data['updated'], '2')
     
     #patch movie no auth
@@ -284,7 +284,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header missing')
     
     #patch movie no permissions
@@ -297,7 +297,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Missing permissions')
     
     #patch movie 404 error 
@@ -310,7 +310,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Movie not found in database')
 
     #delete movie with authorization
@@ -319,7 +319,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.assertEqual(data['deleted'], '2')
 
     #delete movie no authorization
@@ -328,7 +328,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
     
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Authorization header missing')
 
     #delete movie no permissions
@@ -337,7 +337,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'No permissions found')
 
     #delete movie 404 
@@ -346,7 +346,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'Movie not found in database')
 
 if __name__=="__main__":
