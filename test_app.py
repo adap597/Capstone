@@ -4,7 +4,6 @@ import json
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
 from models import setup_db, Actor, Movie
-from config import bearer_tokens
 from sqlalchemy import desc
 from datetime import date
 
