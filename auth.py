@@ -10,14 +10,16 @@ ALGORITHMS = ['RS256']
 API_AUDIENCE = 'Casting'
 CLIENT_ID = 'nBEglxlDSNtkW33pVuNyFYpXhPdz6PzG'
 
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
         self.status_code = status_code
 
+
 def get_token_auth_header():
 
-# get headers from the request
+    # get headers from the request
     auth = request.headers.get('Authorization', None)
     if not auth:
         raise AuthError({
@@ -88,7 +90,7 @@ def verify_decode_jwt(token):
                 'use': key['use'],
                 'n': key['n'],
                 'e': key['e']
-        }
+            }
     if rsa_key:
         try:
             payload = jwt.decode(

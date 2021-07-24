@@ -3,7 +3,7 @@ from sqlalchemy import Column, String, Integer, create_engine, DateTime, Foreign
 from flask_sqlalchemy import SQLAlchemy
 import json
 import dateutil.parser
-import sys 
+import sys
 from flask_migrate import Migrate
 
 
@@ -16,6 +16,8 @@ db = SQLAlchemy()
 setup_db(app)
     binds a flask application and a SQLAlchemy service
 '''
+
+
 def setup_db(app, database_path=database_path):
     app.config["SQLALCHEMY_DATABASE_URI"] = database_path
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -23,12 +25,14 @@ def setup_db(app, database_path=database_path):
     db.init_app(app)
     migrate = Migrate(app, db)
 
+
 def db_drop_and_create_all():
     db.drop_all()
     db.create_all()
 
+
 class Movie(db.Model):
-    __tablename__='movies'
+    __tablename__ = 'movies'
 
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(120), nullable=False)
@@ -38,14 +42,14 @@ class Movie(db.Model):
     def __repr__(self):
         return f"<Movie id = '{self.id}' title='{self.title}'>"
 
-    def __init__ (self, title, release_date):
-        self.title = title 
+    def __init__(self, title, release_date):
+        self.title = title
         self.release_date = release_date
 
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
@@ -58,10 +62,7 @@ class Movie(db.Model):
             'id': self.id,
             'title': self.title,
             'release_date': self.release_date
-            
         }
-
-    
 
 
 class Actor(db.Model):
@@ -80,18 +81,14 @@ class Actor(db.Model):
         self.name = name
         self.age = age
         self.gender = gender
-    
+
     def insert(self):
         db.session.add(self)
         db.session.commit()
-    
+
     def delete(self):
         db.session.delete(self)
         db.session.commit()
 
     def update(self):
         db.session.commit()
-
-
-
-
