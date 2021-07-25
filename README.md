@@ -1,161 +1,235 @@
 # Intro
 
-The Casting Agency API supports a basic castic agency by allowing users to query the database for movies and actors. There are three different user roles (and related permissions), which are:
-- Casting agent: Can view actors and movies.
+The Casting Agency API models a company responsible for creating movies and managing and assigning actors to those movies. The API allows users to query the database for movies and actors. There are three user roles and associated permissions:
+- Casting assistant: Can view actors and movies.
 - Casting director: Can view, add, modify, or delete actors; can view and modify movies.
 - Executive producer: Can view, add, modify, or delete actors and movies. 
 
-# Running the API [TODO]
+## Getting Started
 
-API endpoints can be accessed via https://capstone-fsnd-varlese.herokuapp.com/
+### Installing Dependencies
 
-Auth0 information for endpoints that require authentication can be found in `setup.sh`.
+#### Python 3.7
 
-# Running tests
+Follow instructions to install the latest version of python for your platform in the [python docs](https://docs.python.org/3/using/unix.html#getting-and-installing-the-latest-version-of-python)
 
-To run the unittests, first CD into the Capstone folder and run the following command:
+#### Virtual Environment
+
+We recommend working within a virtual environment whenever using Python for projects. This keeps your dependencies for each project separate and organized. Instructions for setting up a virtual environment for your platform can be found in the [python docs](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/)
+
+#### PIP Dependencies
+
+Once you have your virtual environment setup and running, install dependencies by running:
+
+```bash
+pip install -r requirements.txt
 ```
-python -m agency.tests
+
+This will install all of the required packages we selected within the `requirements.txt` file.
+
+#### Database Setup
+
+With Postgres running, restore the database using the casting.psql file provided. In terminal run:
+
+```bash
+createdb capstone
+psql capstone < capstone.psql
 ```
 
-# API Documentation
-
-Errors
-`401`
-`403`
-`404`
-`422`
-
-Note: all error handlers return a JSON object with the request status and error message.
-
-401
-- 401 error handler is returned when there is an issue with the authentication necessary for the action being requested. 
+#### Running Tests
+To run the tests, run
+```bash
+dropdb casting_test
+createdb casting_test
+psql casting_test < casting.psql
+python test_app.py
 ```
+
+##### Key Dependencies
+
+- [Flask](http://flask.pocoo.org/) is a lightweight backend microservices framework. Flask is required to handle requests and responses.
+
+- [SQLAlchemy](https://www.sqlalchemy.org/) and [Flask-SQLAlchemy](https://flask-sqlalchemy.palletsprojects.com/en/2.x/) are libraries to handle the lightweight sqlite database. 
+
+- [Flask-CORS](https://flask-cors.readthedocs.io/en/latest/#) is the extension used to handle cross origin requests. 
+
+- [Auth0](https://auth0.com/docs/) is the authentication and authorization system used to handle users with different roles.
+
+- [PostgreSQL](https://www.postgresql.org/) is the relational dartabase used for this project. 
+
+- [Heroku](https://www.heroku.com/what) is the cloud platform used for deployment.
+
+#### Auth0 Setup
+
+You need to setup an Auth0 account.
+
+Environment variables needed: (setup.sh)
+
+```bash
+export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" # Choose your tenant domain
+export ALGORITHMS="RS256"
+export API_AUDIENCE="Casting" # Create an API in Auth0
+```
+
+##### Roles
+
+Create three roles for users under `Users & Roles` section in Auth0
+
+* Casting Assistant
+	* Can view actors and movies
+* Casting Director
+	* All permissions a Casting Assistant has and…
+	* Add or delete an actor from the database
+	* Modify actors or movies
+* Executive Producer
+	* All permissions a Casting Director has and…
+	* Add or delete a movie from the database
+
+##### Permissions
+
+Following permissions should be created under created API settings.
+
+* `get:actors`
+* `get:movies`
+* `delete:actors`
+* `post:actors`
+* `patch:actors`
+* `patch:movies`
+* `post:movies`
+* `delete:movies`
+
+
+Use the following link to sign in each user after you have assigned roles and permissions. This will generate tokens. 
+
+```
+https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=token&client_id={{YOUR_CLIENT_ID}}&redirect_uri={{YOUR_CALLBACK_URI}}
+```
+#### Launching The App
+
+1. Initialize and activate a virtualenv:
+
+   ```bash
+   source env/bin/activate
+   ```
+
+2. Install the dependencies:
+
+    ```bash
+    pip install -r requirements.txt
+    ```
+3. Configure database path to connect local postgres database in `models.py`
+
+    ```python
+        database_filename = "casting"
+        project_dir = os.path.dirname(os.path.abspath(__file__))
+        database_path = "postgresql:///{}".format(database_filename)
+    ```
+**Note:** For default postgres installation, default user name is `postgres` with no password. 
+
+
+4. Setup the environment variables for Auth0 under `setup.sh` running:
+	```bash
+	source ./setup.sh 
+	```
+5.  To run the server locally, execute:
+
+    ```bash
+    export FLASK_APP=app
+    export FLASK_DEBUG=True
+    export FLASK_ENVIRONMENT=debug
+    flask run --reload
+    ```
+
+## API Documentation
+
+### Models
+There are two models:
+* Movie
+	* title
+	* release_date
+* Actor
+	* name
+	* age
+	* gender
+
+### Error Handling
+
+Errors are returned as JSON objects in the following format:
+```json
 {
-	"error": 401,
-	"message": "Authentication error.",
-	"success": false
+    "success": False, 
+    "error": 400,
+    "message": "bad request"
 }
 ```
-403
-- 403 error handler occurs when the requested action is not allowed, i.e. incorrect permissions.
-```
-{
-	"error": 403,
-	"message": "Forbidden.",
-	"success": false
-}
-```
-404
-- 404 error handler occurs when a request resource cannot be found in the database, i.e. an actor with a nonexistent ID is requested.
-```
-{
-	"error": 404,
-	"message": "Item not found.",
-	"success": false
-}
-```
-422
-- 422 error handler is returned when the request contains invalid arguments, i.e. a difficulty level that does not exist.
-```
-{
-	"error": 422,
-	"message": "Request could not be processed.",
-	"success": false
-}
-```
+The API will return three error types when requests fail:
+- 400: Bad Request
+- 401: Unauthorized
+- 403: Forbidden
+- 404: Resource Not Found
+- 422: Unprocessable 
+- 500: Internal Server Error
 
-Endpoints
-`GET '/actors'`
-`GET '/movies'`
-`POST '/add-actor'`
-`POST '/add-movie'`
-`PATCH '/actors/<int:actor_id>'`
-`PATCH '/movies/<int:movie_id>'`
-`DELETE '/actors/<int:actor_id>'`
-`DELETE '/movies/<int:movie_id>'`
+### Endpoints
 
-GET '/actors'
-- Fetches a JSON object with a list of actors in the database.
-- Request Arguments: None
-- Returns: An object with a single key, actors, that contains multiple objects with a series of string key pairs.
-```
-{
-    "actors": [
-        {
-            "age": "45",
-            "gender": "male",
-            "id": 1,
-            "name": "Leonardo DiCaprio"
-        },
-        {
-            "age": "42",
-            "gender": "male",
-            "id": 2,
-            "name": "Jensen Ackles"
-        },
-        {
-            "age": "70",
-            "gender": "female",
-            "id": 3,
-            "name": "Meryl Streep"
-        },
-        {
-            "age": "37",
-            "gender": "female",
-            "id": 4,
-            "name": "Anne Hathaway"
-        }
-    ],
-    "success": true
-}
-```
-GET '/movies'
-- Fetches a JSON object with a list of movies in the database.
-- Request Arguments: None
-- Returns: An object with a single key, movies, that contains multiple objects with a series of string key pairs.
-```
-{
+
+#### GET /movies 
+* Get all movies
+
+* Require `get:movies` permission
+
+* **Expected Result:**
+```json
+    {
     "movies": [
         {
             "id": 1,
-            "release": "December 19, 1997",
-            "title": "Titatic"
+            "release_date": "May 2, 2011",
+            "title": "Thor"
         },
         {
             "id": 3,
-            "release": "January 16, 2009",
-            "title": "My Bloody Valentine"
-        },
-        {
-            "id": 4,
-            "release": "May 23rd, 1980",
+            "release_date": "May 23, 1980,
             "title": "The Shining"
         }
+
     ],
     "success": true
-}
+    }
 ```
-POST '/add-actor'
-- Posts a new actor to the database, including the name, age, gender, and actor ID, which is automatically assigned upon insertion.
-- Request Arguments: Requires three string arguments: name, age, gender.
-- Returns: An actor object with the age, gender, actor ID, and name.
+	
+#### GET /actors 
+* Get all actors
 
-```
-{
-    "actor": {
-        "age": "36",
-        "gender": "male",
-        "id": 6,
-        "name": "Henry Cavill"
-    },
-    "success": true
-}
-```
-POST '/add-movie'
-- Posts a new movie to the database, including the title, release, and movie ID, which is automatically assigned upon insertion.
-- Request Arguments: Requires two string arguments: title, release.
-- Returns: A movie object with the movie ID, release, and title.
+* Requires `get:actors` permission
+
+* **Expected Result:**
+    ```json
+	{
+		"actors": [
+			{
+			"age": 48,
+			"gender": "M",
+			"id": 1,
+			"movie_id": 1,
+			"name": "Idris Elba"
+			},
+			{
+			"age": 84,
+			"gender": "M",
+			"id": 2,
+			"movie_id": 2,
+			"name": "Jack Nicholson"
+			}
+		],
+		"success": true
+	}
+	```
+	
+#### POST /movies
+* Creates a new movie.
+* Requires `post:movies` permission
+* Requires the title and release date.
 
 ```
 {
@@ -167,15 +241,12 @@ POST '/add-movie'
     "success": true
 }
 ```
-PATCH '/actors/<int:actor_id>'
-- Patches an existing actor in the database.
-- Request arguments: Actor ID, included as a parameter following a forward slash (/), and the key to be updated passed into the body as a JSON object. For example, to update the age for '/actors/6'
-```
-{
-	"age": "36"
-}
-```
-- Returns: An actor object with the full body of the specified actor ID.
+
+#### POST /actors
+* Creates a new actor.
+* Requires `post:actors` permission
+* Requires the name, age and gender of the actor.
+
 ```
 {
     "actor": {
@@ -187,15 +258,46 @@ PATCH '/actors/<int:actor_id>'
     "success": true
 }
 ```
-PATCH '/movies/<int:movie_id>'
-- Patches an existing movie in the database.
-- Request arguments: Movie ID, included as a parameter following a forward slash (/), and the key to be updated, passed into the body as a JSON object. For example, to update the age for '/movies/5'
+
+#### DELETE /movies/<int:movie_id>
+* Deletes the movie with given id 
+* Require `delete:movies` permission
+* Request argument: Movie id, included as a parameter following a forward slash (/).
+* Returns: ID for the deleted movie and status code of the request.
+
+```
+{
+	'id': 5,
+	'success': true
+}
+```
+    
+#### DELETE /actors/<int:actor_id>
+* Deletes the actor with given id 
+* Require `delete:actors` permission
+* Request argument: Actor id, included as a parameter following a forward slash (/).
+* Returns: ID for the deleted actor and status code of the request.
+
+```
+{
+	'id': 5,
+	'success': true
+}
+```
+
+#### PATCH /movies/<movie_id>
+* Updates the movie where <movie_id> is the existing movie id
+* Require `patch:movies` permission
+* Responds with a 404 error if <movie_id> is not found
+* Update the corresponding fields for Movie with id <movie_id>
+
 ```
 {
 	"release": "November 3, 2017"
 }
 ```
-- Returns: A movie object with the full body of the specified movie ID.
+  
+* **Example Response:**
 ```
 {
     "movie": {
@@ -206,23 +308,28 @@ PATCH '/movies/<int:movie_id>'
     "success": true
 }
 ```
-DELETE '/actors/<int:actor_id>'
-- Deletes an actor in the database via the DELETE method and using the actor id.
-- Request argument: Actor id, included as a parameter following a forward slash (/).
-- Returns: ID for the deleted question and status code of the request.
+	
+#### PATCH /actors/<actor_id>
+* Updates the actor where <actor_id> is the existing actor id
+* Require `patch:actors`
+* Responds with a 404 error if <actor_id> is not found
+* Update the given fields for Actor with id <actor_id>
 ```
 {
-	'id': 5,
-	'success': true
+	"age": "36"
 }
 ```
-DELETE '/movies/<int:movie_id>'
-- Deletes a movie in the database via the DELETE method and using the movie id.
-- Request argument: Movie id, included as a parameter following a forward slash (/).
-- Returns: ID for the deleted question and status code of the request.
+  
+* **Example Response:**
 ```
 {
-	'id': 5,
-	'success': true
+    "actor": {
+        "age": "36",
+        "gender": "male",
+        "id": 6,
+        "name": "Henry Cavill"
+    },
+    "success": true
 }
 ```
+
