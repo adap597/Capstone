@@ -1,6 +1,7 @@
 import os
 import unittest
 from flask import Flask, request, abort, jsonify
+#from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 import json
@@ -14,7 +15,7 @@ from auth import requires_auth, AuthError
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
-
+    #migrate = Migrate(app, db)
     #CORS(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
@@ -39,11 +40,13 @@ def create_app(test_config=None):
     @requires_auth("get:actors")
     def retrieve_actors(payload):
         actors = Actor.query.all()
+        try:
+            if not actors:
+                abort(404)
+        
+        except:
 
-        if not actors:
-            abort(404)
-
-        return jsonify(
+            return jsonify(
                      {"success": True,
                       "actors": [actor.format() for actor in actors]}), 200
 
@@ -53,11 +56,13 @@ def create_app(test_config=None):
     @requires_auth("get:movies")
     def retrieve_movies(payload):
         movies = Movie.query.all()
+        try:
+           
+            if not movies:
+                abort(404)
 
-        if not movies:
-            abort(404)
-
-        return jsonify(
+        except:
+            return jsonify(
                     {"success": True,
                      "movies": [movie.format() for movie in movies]}), 200
                     
@@ -183,13 +188,16 @@ def create_app(test_config=None):
     def delete_movie(payload, id):
 
         movie = Movie.query.filter(Movie.id == id).one_or_none()
+        try:
+            if movie is None:
+                abort(404)
 
-        if movie is None:
-            abort(404)
+            else:
+                movie.delete()
 
-        movie.delete()
-
-        return jsonify({"success": True, "delete": movie.id})
+                return jsonify({"success": True, "delete": movie.id})
+        except:
+            abort(500)
 
     # Malformed request error
     # the request cannot be processed due to client error
