@@ -1,11 +1,10 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
+
 import os
 import unittest
 import json
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
-from models import setup_db, Actor, Movie
+from models import setup_db, Actor, Movie, db_drop_and_create_all
 from sqlalchemy import desc
 from datetime import date
 
@@ -32,6 +31,7 @@ class CastingTest(unittest.TestCase):
         with self.app.app_context():
             self.db = SQLAlchemy()
             self.db.init_app(self.app)
+            self.db.drop_all()
             self.db.create_all()
 
     def tearDown(self):
@@ -48,7 +48,7 @@ class CastingTest(unittest.TestCase):
 
         self.assertEqual(res.status_code, 200)
         self.asserEqual(data['success'], True)
-        self.assertTrue(len(data['movies']) > 0)
+        self.assertTrue(data['movies'])
 
     # Retrieve movies with no authorization
 
