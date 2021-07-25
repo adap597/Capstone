@@ -15,7 +15,8 @@ def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
 
-    CORS(app)
+    #CORS(app)
+    cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     @app.after_request
     def after_request(response):
@@ -42,11 +43,9 @@ def create_app(test_config=None):
         if not actors:
             abort(404)
 
-        return (
-            jsonify(
+        return jsonify(
                      {"success": True,
-                      "actors": [actor.format() for actor in actors]}), 200,
-                    )
+                      "actors": [actor.format() for actor in actors]}), 200
 
     # Get list of movies
 
@@ -58,11 +57,10 @@ def create_app(test_config=None):
         if not movies:
             abort(404)
 
-        return (
-            jsonify(
+        return jsonify(
                     {"success": True,
-                     "movies": [movie.format() for movie in movies]}), 200,
-                    )
+                     "movies": [movie.format() for movie in movies]}), 200
+                    
 
     # Add a new actor
 
@@ -245,11 +243,10 @@ def create_app(test_config=None):
     @app.errorhandler(500)
     def internal_server_error(error):
         print(error)
-        return (
-            jsonify(
+        return jsonify(
                     {"success": False,
-                     "error": 500, "message": "internal server error"}), 500,
-                    )
+                     "error": 500, "message": "internal server error"}), 500
+                    
 
     @app.errorhandler(AuthError)
     def handleAuthError(_ErR_):
