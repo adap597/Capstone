@@ -8,6 +8,7 @@ import json
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
 from auth import requires_auth, AuthError
+from simplejson import dumps
 
 # create and configure the app
 
@@ -22,55 +23,60 @@ def create_app(test_config=None):
     @app.after_request
     def after_request(response):
         response.headers.add(
-            "Access-Control-Allow-Headers", "Content-Type, Authorization"
+            'Access-Control-Allow-Headers', 'Content-Type, Authorization'
         )
         response.headers.add(
-            "Access-Control-Allow-Methods", "GET, POST, PATCH, DELETE, OPTIONS"
+            'Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS'
         )
 
         return response
 
     @app.route("/")
     def health():
-        return jsonify({"health": "healthy"}), 200
+        return jsonify({'health': 'healthy'}), 200
 
     # Get list of actors
 
-    @app.route("/actors", methods=["GET"])
-    @requires_auth("get:actors")
+    @app.route('/actors', methods=['GET'])
+    @requires_auth('get:actors')
     def retrieve_actors(payload):
-        actors = Actor.query.all()
+        
         try:
-            if not actors:
-                abort(404)
+            actors = Actor.query.all()
+            return jsonify({
+                'success': True,
+                'actors': [actor.format() for actor in actors]}), 200
         
         except:
 
-            return jsonify(
-                     {"success": True,
-                      "actors": [actor.format() for actor in actors]}), 200
+            if len(actors) == 0:
+                abort(404)
+            else:
+                abort(422)
 
     # Get list of movies
 
-    @app.route("/movies", methods=["GET"])
-    @requires_auth("get:movies")
+    @app.route('/movies', methods=['GET'])
+    @requires_auth('get:movies')
     def retrieve_movies(payload):
-        movies = Movie.query.all()
+        
         try:
-           
-            if not movies:
-                abort(404)
+            movies = Movie.query.all()
+            return jsonify({
+                'success': True,
+                'movies': [movie.format() for movie in movies]}), 200
 
         except:
-            return jsonify(
-                    {"success": True,
-                     "movies": [movie.format() for movie in movies]}), 200
+            if len(movies) == 0:
+                abort(404)
+            else:
+                abort(422)
                     
 
     # Add a new actor
 
-    @app.route("/actors", methods=["GET", "POST"])
-    @requires_auth("post:actors")
+    @app.route('/actors', methods=['GET', 'POST'])
+    @requires_auth('post:actors')
     def add_actor(payload):
         body = request.get_json()
 
@@ -87,7 +93,9 @@ def create_app(test_config=None):
 
             actor.insert()
 
-            return jsonify({"success": True, "actors": actor.format()})
+            return jsonify({
+                "success": True,
+                "actors": actor.format()})
         except:
             abort(500)
 
@@ -112,55 +120,63 @@ def create_app(test_config=None):
 
             actor.update()
 
-            return jsonify({"success": True, "actor": actor.format()})
+            return jsonify({
+                "success": True,
+                "actor": actor.format()})
 
         except:
             abort(404)
 
     # Delete Actor
 
-    @app.route("/actors/<int:id>", methods=["DELETE"])
-    @requires_auth("delete:actors")
+    @app.route('/actors/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:actors')
     def delete_actor(payload, id):
-
         actor = Actor.query.filter(Actor.id == id).one_or_none()
 
         if actor is None:
-            abort(404)
+                abort(404)
+        try:
+            actor.delete()
 
-        actor.delete()
-
-        return jsonify({"success": True, "delete": actor.id})
+            return jsonify({
+                'success': True,
+                'delete': actor.id}), 200
+        except:
+             abort(422)
+            
 
     # Add movie
 
-    @app.route("/movies", methods=["POST"])
-    @requires_auth("post:movies")
+    @app.route('/movies', methods=['GET', 'POST'])
+    @requires_auth('post:movies')
     def add_movie(payload):
         body = request.get_json()
 
         if not body:
             abort(422)
 
-        if "title" not in body or "release_date" not in body:
+        if 'title' not in body or 'release_date' not in body:
             abort(422)
 
         try:
-            title = body["title"]
-            release_date = body["release_date"]
+            title = body['title']
+            release_date = body['release_date']
             movie = Movie(title=title, release_date=release_date)
 
             movie.insert()
 
-            return jsonify({"success": True, "movie": movie.format()})
+            return jsonify({
+                'success': True,
+                'movie': movie.format()})
 
         except:
-            abort(500)
+            abort(422)
 
     # Update movie
 
-    @app.route("/movies/<int:id>", methods=["PATCH"])
-    @requires_auth("patch:movies")
+    @app.route('/movies/<int:id>', methods=['PATCH'])
+    @requires_auth('patch:movies')
     def update_movie(payload, id):
         body = request.get_json()
         movie = Movie.query.get(id)
@@ -169,35 +185,40 @@ def create_app(test_config=None):
             abort(404)
 
         try:
-            if "title" in body:
-                movie.title = body["title"]
-            if "release_date" in body:
-                movie.release_date = body["release_date"]
+            if 'title' in body:
+                movie.title = body['title']
+            if 'release_date' in body:
+                movie.release_date = body['release_date']
 
             movie.update()
 
-            return jsonify({"success": True, "movie": movie.format()})
+            return jsonify({
+                'success': True,
+                'movie': movie.format()})
 
         except:
-            abort(404)
+            abort(422)
 
     # Delete movie
 
-    @app.route("/movies/<int:id>", methods=["DELETE"])
-    @requires_auth("delete:movies")
+    @app.route('/movies/<int:id>', methods=['DELETE'])
+    @requires_auth('delete:movies')
     def delete_movie(payload, id):
 
         movie = Movie.query.filter(Movie.id == id).one_or_none()
+
+        if movie is None:
+            abort(404)
+
         try:
-            if movie is None:
-                abort(404)
+            movie.delete()
 
-            else:
-                movie.delete()
-
-                return jsonify({"success": True, "delete": movie.id})
-        except:
-            abort(500)
+            return jsonify({
+                'success': True,
+                'delete': movie.id}), 200
+        
+        except: 
+            abort(422)
 
     # Malformed request error
     # the request cannot be processed due to client error
@@ -205,17 +226,17 @@ def create_app(test_config=None):
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify(
-                        {"success": False,
-                         "error": 400, "message": "bad request"}), 400
+                        {'success': False,
+                         'error': 400, 'message': 'bad request'}), 400
 
     # No authorization error
     # authentication has not been provided
 
-    @app.errorhandler(AuthError)
+    @app.errorhandler(401)
     def unauthorized(error):
         return jsonify(
-                      {"success": False,
-                       "error": 401, "message": "unauthorized"}), 401
+                      {'success': False,
+                       'error': 401, 'message': 'unauthorized'}), 401
 
     # No permission error
     # Used to handle requests where permission missing for user
@@ -223,8 +244,8 @@ def create_app(test_config=None):
     @app.errorhandler(403)
     def forbidden(error):
         return jsonify(
-                        {"success": False,
-                         "error": 403, "message": "forbidden"}), 403
+                        {'success': False,
+                         'error': 403, 'message': 'forbidden'}), 403
 
     # Resource not found error
 
@@ -232,8 +253,8 @@ def create_app(test_config=None):
     def not_found(error):
         return (
             jsonify(
-                    {"success": False,
-                     "error": 404, "message": "resource not found"}), 404,
+                    {'success': False,
+                     'error': 404, 'message': 'resource not found'}), 404,
                     )
 
     # Unprocessable error
@@ -242,8 +263,8 @@ def create_app(test_config=None):
     def unprocessable(error):
         return (
             jsonify(
-                    {"success": False,
-                     "error": 422, "message": "unprocessable"}), 422,
+                    {'success': False,
+                     'error': 422, 'message': 'unprocessable'}), 422,
                     )
 
     # Internal server error
@@ -252,12 +273,12 @@ def create_app(test_config=None):
     def internal_server_error(error):
         print(error)
         return jsonify(
-                    {"success": False,
-                     "error": 500, "message": "internal server error"}), 500
+                    {'success': False,
+                     'error': 500, 'message': 'internal server error'}), 500
                     
 
     @app.errorhandler(AuthError)
-    def handleAuthError(_ErR_):
+    def autherror(_ErR_):
         response = jsonify(_ErR_.error)
         response.status_code = _ErR_.status_code
         return response
@@ -267,5 +288,6 @@ def create_app(test_config=None):
 
 app = create_app()
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+if __name__ == '__main__':
+    app.run(debug=True)
+    #app.run(host="0.0.0.0", port=8080, debug=True)
