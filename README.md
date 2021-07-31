@@ -70,7 +70,20 @@ export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com"
 export ALGORITHMS="RS256"
 export API_AUDIENCE="Casting" 
 ```
+Note: When you are testing the application on your local machine, the Login, Logout, and Allowed callback URLs in your application should be something like
 
+```
+https://127.0.0.1:5000/login
+https://127.0.0.1:5000/login-results
+https://127.0.0.1:5000/logout
+```
+
+Once you are ready to deploy to Heroku, you must change the Login, Logout, and Allowed callback URL to reference the Heroku app.
+```
+https://{{NAME_OF_YOUR_APP}}.herokuapp.com/login
+https://{{NAME_OF_YOUR_APP}}.herokuapp.com/login-results
+https://{{NAME_OF_YOUR_APP}}.herokuapp.com/logout
+```
 ##### Roles
 
 Create three roles for users under `Users & Roles` section in Auth0
