@@ -8,7 +8,7 @@ import json
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
 from auth import requires_auth, AuthError
-from simplejson import dumps
+#from simplejson import dumps
 
 # create and configure the app
 
