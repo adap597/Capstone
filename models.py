@@ -93,3 +93,11 @@ class Actor(db.Model):
 
     def update(self):
         db.session.commit()
+
+    def format(self):
+        return{
+            'id': self.id,
+            'name': self.name,
+            'age': self.age,
+            'gender': self.gender
+        }
