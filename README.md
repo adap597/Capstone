@@ -61,14 +61,14 @@ python test_app.py
 
 #### Auth0 Setup
 
-You need to setup an Auth0 account.
+You need to setup an Auth0 account and create an Application and an API for your application.
 
 Environment variables needed: (setup.sh)
 
 ```bash
-export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" # Choose your tenant domain
+export AUTH0_DOMAIN="xxxxxxxxxx.auth0.com" 
 export ALGORITHMS="RS256"
-export API_AUDIENCE="Casting" # Create an API in Auth0
+export API_AUDIENCE="Casting" 
 ```
 
 ##### Roles
