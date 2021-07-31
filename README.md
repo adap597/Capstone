@@ -155,6 +155,10 @@ https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=toke
 
 ## API Documentation
 
+### Base URL
+
+https://git.heroku.com/casting-app-capstone.git
+
 ### Models
 There are two models:
 * Movie
