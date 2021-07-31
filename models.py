@@ -5,7 +5,7 @@ import json
 import dateutil.parser
 import sys
 from flask_migrate import Migrate
-from simplejson import dumps
+#from simplejson import dumps
 
 
 database_filename = "casting"
