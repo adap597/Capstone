@@ -25,7 +25,7 @@ class CastingTest(unittest.TestCase):
         self.casting_director = casting_director_token
         self.exec_producer = executive_producer_token
         setup_db(self.app, self.database_path)
-        db_drop_and_create_all()
+        #db_drop_and_create_all()
 
         with self.app.app_context():
             self.db = SQLAlchemy()
@@ -44,7 +44,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertTrue(data['success'])
+        self.assertEqual(data['success'], True)
         self.assertTrue(len(data['movies']) > 0 )
 
     # Retrieve movies with no authorization
@@ -54,7 +54,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unauthorized')
 
     # Retrieve movies error test - no movies
@@ -64,7 +64,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
     # Retreive Actors tests
@@ -86,7 +86,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'],'unauthorized')
 
     # Retrieve actors error test - no actors in database
@@ -97,7 +97,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
     # Insert actors tests
@@ -126,7 +126,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unauthorized')
 
     # insert actor missing form data
@@ -139,7 +139,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
 
     # patch actor with auth
@@ -167,7 +167,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unauthorized')
 
     # patch actor no actor in database
@@ -181,7 +181,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
     # delete actor with auth and permissions
@@ -203,7 +203,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'forbidden')
 
     # delete actor not in database error
@@ -214,7 +214,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
     # insert movie with auth
@@ -241,7 +241,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success']), False
         self.assertEqual(data['message'], 'unauthorized'
                          )
 
@@ -256,7 +256,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'forbidden'
                          )
 
@@ -270,7 +270,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 422)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
 
     # patch movie with auth
@@ -295,7 +295,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 401)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unauthorized'
                          )
 
@@ -309,7 +309,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'forbidden')
 
     # patch movie 404 error
@@ -323,7 +323,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
     # delete movie with authorization
@@ -355,7 +355,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 403)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'forbidden')
 
     # delete movie 404
@@ -366,7 +366,7 @@ class CastingTest(unittest.TestCase):
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
-        self.assertFalse(data['success'])
+        self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
 
 
