@@ -1,7 +1,7 @@
 
 import os
 import unittest
-#from simplejson import dumps
+# from simplejson import dumps
 import json
 from flask_sqlalchemy import SQLAlchemy
 from app import create_app
@@ -13,7 +13,8 @@ from datetime import date
 casting_assistant_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MGI1NjNmNTk2ZmM3MzAwNjk0M2M3NDYiLCJhdWQiOiJDYXN0aW5nIiwiaWF0IjoxNjI3MzQyNTQyLCJleHAiOjE2MjczNDk3NDIsImF6cCI6Im5CRWdseGxEU050a1czM3BWdU55RllwWGhQZHo2UHpHIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJnZXQ6YWN0b3JzIiwiZ2V0Om1vdmllcyJdfQ.Xegs6kkurtOHbyBfbdb4V6EsrOxzlQnXpHXXK5Ye-rsBcuTDfoJbsNndn5mNcyWkBz-tRGf6pexL91V1vJt5k45b0GEj8buuESZS84eRsD64iz0E6e_CklZBDpiY-RhHWaKOTl5uoVlDkGt9fD42Xup1iYrmohflXrq4kJbxafWTQHLbitMe-cpGgJ5evCLvIz3DgGt7J3oI3XetNxjCm_ACazLDKAhvFa5v4-LywSN2tapuz6RT5OlgrJYHAOyL9ujoOjC3D4ecyhi4eInEiu8LRIMJ9s9lTIyBmH4a7c9bHzAG2nak6op8VDtojRItH9oZqnPYbWgTYnOD9h8X-g'
 casting_director_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJhdXRoMHw2MGJkNGExZWQwMmY2NTAwNjk1YWFiMGMiLCJhdWQiOiJDYXN0aW5nIiwiaWF0IjoxNjI3MzQyNjY4LCJleHAiOjE2MjczNDk4NjgsImF6cCI6Im5CRWdseGxEU050a1czM3BWdU55RllwWGhQZHo2UHpHIiwic2NvcGUiOiIiLCJwZXJtaXNzaW9ucyI6WyJkZWxldGU6YWN0b3JzIiwiZ2V0OmFjdG9ycyIsImdldDptb3ZpZXMiLCJwYXRjaDphY3RvcnMiLCJwYXRjaDptb3ZpZXMiLCJwb3N0OmFjdG9ycyJdfQ.MAvbYKZZXde3vqBZxsfanzPMd_6gGKLcwwsvoxSCMXQBL2yhkLz8s-8Fa72cWvFG--pohUcQP2QS-ANF5F5pYSjNYDunTUq5NkOOOtFOA2pn66NlNu8gqcEQUhe0q7wM3p8ALcI8YpNd8a2irNTmKfdd0OXwefh5RaAE5KYoMK7Sq4J6Ebo1raaru1Zz_XCQKKNx-I2oCX9Ku6bZKtqKLioeVjZfisOqBQ2RsMQrlEmQHssSdZ48bKvkMmtf1TqTdHysI7ErQh61arA_dIEgAdR9dYRjNll7mEhlMtoGH4sc8RBfavKDxEjta4mij0Jcw-QWQsDUXkU4w_zhxjdAFw'
 executive_producer_token = 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik5HSi1MNTJCMFU3UnZGeVJxUnlXZiJ9.eyJpc3MiOiJodHRwczovL3VkYWNmc25kLnVzLmF1dGgwLmNvbS8iLCJzdWIiOiJnb29nbGUtb2F1dGgyfDEwODI2MzYzNDUzNjk5MDQwNzUwNCIsImF1ZCI6IkNhc3RpbmciLCJpYXQiOjE2Mjc3NzMxODAsImV4cCI6MTYyNzc4MDM4MCwiYXpwIjoibkJFZ2x4bERTTnRrVzMzcFZ1TnlGWXBYaFBkejZQekciLCJzY29wZSI6IiIsInBlcm1pc3Npb25zIjpbXX0.xTxJLRYAPowec8VDHYkFGT37u13tck4rTrCvw2YX36gwxuU-Qr98rND0grgu53pmHnu7KAmsTgJI5FUUayaNM0F5hhyd03Xj2nNaLRjo5p49F0QSY2vLozubvUhlqw5SdrJ_NEIQm4BxMLfx5ZYD4QC_aU9DBmTHVYlsS0yIH9fP8RykRIOyW0SVxs4hW7QmaYlULmQa9HiSbPijk6CTJW-M11RTtJ-CMkN44S-DkZNn5rTXfedCRzx30nsVa3dfqJ5ymeEh3LEfn_fI67-jJ2ny5496UUTl0lmgWGr7gOuGpeE4Cu4x8vEhtZKImM29kiClIWw0faXKq4zQjPs5SA'
-     
+
+
 class CastingTest(unittest.TestCase):
 
     def setUp(self):
@@ -39,13 +40,14 @@ class CastingTest(unittest.TestCase):
     # Retrieve movies with authorization
 
     def test_retrieve_movies(self):
-        res = self.client().get('/movies?page=1', headers= {'Authorization': 'Bearer {}'.format(self.casting_assistant)})
+        res = self.client().get('/movies?page=1',
+                                headers={'Authorization': 'Bearer {}'.format(self.casting_assistant)})
 
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertTrue(len(data['movies']) > 0 )
+        self.assertTrue(len(data['movies']) > 0)
 
     # Retrieve movies with no authorization
 
@@ -73,7 +75,7 @@ class CastingTest(unittest.TestCase):
 
     def test_retrieve_actors(self):
         res = self.client().get('actors?page=1',
-                                headers= {'Authorization': 'Bearer {}'.format(self.casting_assistant)})
+                                headers={'Authorization': 'Bearer {}'.format(self.casting_assistant)})
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
@@ -87,7 +89,7 @@ class CastingTest(unittest.TestCase):
 
         self.assertEqual(res.status_code, 401)
         self.assertEqual(data['success'], False)
-        self.assertEqual(data['message'],'unauthorized')
+        self.assertEqual(data['message'], 'unauthorized')
 
     # Retrieve actors error test - no actors in database
 
@@ -234,8 +236,8 @@ class CastingTest(unittest.TestCase):
     # insert movie no auth
 
     def test_insert_movie_no_auth(self):
-        json_insert_movie = dumps({'title': 'Castaway 2',
-                             'release_date': '2021-08-25'})
+        json_insert_movie = ({'title': 'Castaway 2',
+                              'release_date': '2021-08-25'})
 
         res = self.client().post('/movies', json=json_insert_movie)
         data = json.loads(res.data)

@@ -1,14 +1,14 @@
 import os
 import unittest
 from flask import Flask, request, abort, jsonify
-#from flask_migrate import Migrate
+# from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
 from auth import requires_auth, AuthError
-#from simplejson import dumps
+# from simplejson import dumps
 
 # create and configure the app
 
@@ -16,8 +16,8 @@ from auth import requires_auth, AuthError
 def create_app(test_config=None):
     app = Flask(__name__)
     setup_db(app)
-    #migrate = Migrate(app, db)
-    #CORS(app)
+    # migrate = Migrate(app, db)
+    # CORS(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     @app.after_request
@@ -40,13 +40,13 @@ def create_app(test_config=None):
     @app.route('/actors', methods=['GET'])
     @requires_auth('get:actors')
     def retrieve_actors(payload):
-        
+
         try:
             actors = Actor.query.all()
             return jsonify({
                 'success': True,
                 'actors': [actor.format() for actor in actors]}), 200
-        
+
         except:
 
             if len(actors) == 0:
@@ -59,7 +59,7 @@ def create_app(test_config=None):
     @app.route('/movies', methods=['GET'])
     @requires_auth('get:movies')
     def retrieve_movies(payload):
-        
+
         try:
             movies = Movie.query.all()
             return jsonify({
@@ -71,7 +71,6 @@ def create_app(test_config=None):
                 abort(404)
             else:
                 abort(422)
-                    
 
     # Add a new actor
 
@@ -143,8 +142,7 @@ def create_app(test_config=None):
                 'success': True,
                 'delete': actor.id}), 200
         except:
-             abort(422)
-            
+            abort(422)
 
     # Add movie
 
@@ -216,8 +214,8 @@ def create_app(test_config=None):
             return jsonify({
                 'success': True,
                 'delete': movie.id}), 200
-        
-        except: 
+
+        except:
             abort(422)
 
     # Malformed request error
@@ -275,7 +273,6 @@ def create_app(test_config=None):
         return jsonify(
                     {'success': False,
                      'error': 500, 'message': 'internal server error'}), 500
-                    
 
     @app.errorhandler(AuthError)
     def autherror(_ErR_):
@@ -290,4 +287,4 @@ app = create_app()
 
 if __name__ == '__main__':
     app.run(debug=True)
-    #app.run(host="0.0.0.0", port=8080, debug=True)
+    # app.run(host="0.0.0.0", port=8080, debug=True)
