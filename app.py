@@ -32,7 +32,7 @@ def create_app(test_config=None):
         return response
 
     @app.route('/')
-    def health():
+    def index():
         return jsonify({'health': 'healthy'}), 200
 
 
