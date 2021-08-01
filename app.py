@@ -31,9 +31,10 @@ def create_app(test_config=None):
 
         return response
 
-    @app.route("/")
+    @app.route('/')
     def health():
         return jsonify({'health': 'healthy'}), 200
+
 
     # Get list of actors
 

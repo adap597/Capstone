@@ -10,7 +10,15 @@ ALGORITHMS = ['RS256']
 API_AUDIENCE = 'Casting'
 CLIENT_ID = 'nBEglxlDSNtkW33pVuNyFYpXhPdz6PzG'
 
+def get_json_data(url):
+    operUrl = urlopen(url)
+    if(operUrl.getcode() != 200):
+        return False
 
+    data = operUrl.read()
+    jsonData = json.loads(data)
+    return jsonData
+    
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error

@@ -1,3 +1,4 @@
+export SECRET='ihxq2MKyjX_XRxdxQIbXLYD1rJohSUpY9QGwbW-AZC1kV0VP-YiZVk4nxvyOEIfv'
 export AUTH0_DOMAIN="udacfsnd.us.auth0.com" 
 export ALGORITHMS="RS256"
 export API_AUDIENCE="Casting" 
