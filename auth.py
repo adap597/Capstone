@@ -11,6 +11,7 @@ ALGORITHMS = 'ALGORITHMS'
 API_AUDIENCE = 'API_AUDIENCE'
 CLIENT_ID = 'CLIENT_ID'
 
+
 def get_json_data(url):
     operUrl = urlopen(url)
     if(operUrl.getcode() != 200):
@@ -19,7 +20,8 @@ def get_json_data(url):
     data = operUrl.read()
     jsonData = json.loads(data)
     return jsonData
-    
+
+
 class AuthError(Exception):
     def __init__(self, error, status_code):
         self.error = error
@@ -65,10 +67,10 @@ def get_token_auth_header():
 
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-                        raise AuthError({
-                            'code': 'invalid_claims',
-                            'description': 'Permissions not included in JWT.'
-                        }, 400)
+        raise AuthError({
+            'code': 'invalid_claims',
+            'description': 'Permissions not included in JWT.'
+        }, 400)
 
     if permission not in payload['permissions']:
         raise AuthError({
@@ -129,9 +131,9 @@ def verify_decode_jwt(token):
                 'description': 'Unable to parse authentication token.'
             }, 400)
     raise AuthError({
-                'code': 'invalid_header',
+        'code': 'invalid_header',
                 'description': 'Unable to find the appropriate key.'
-            }, 400)
+    }, 400)
 
 
 def requires_auth(permission=''):

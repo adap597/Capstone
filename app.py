@@ -35,7 +35,6 @@ def create_app(test_config=None):
     def index():
         return jsonify({'health': 'healthy'}), 200
 
-
     # Get list of actors
 
     @app.route('/actors', methods=['GET'])
@@ -47,9 +46,7 @@ def create_app(test_config=None):
             return jsonify({
                 'success': True,
                 'actors': [actor.format() for actor in actors]}), 200
-
         except:
-
             if len(actors) == 0:
                 abort(404)
             else:
@@ -135,7 +132,7 @@ def create_app(test_config=None):
         actor = Actor.query.filter(Actor.id == id).one_or_none()
 
         if actor is None:
-                abort(404)
+            abort(404)
         try:
             actor.delete()
 
@@ -225,8 +222,8 @@ def create_app(test_config=None):
     @app.errorhandler(400)
     def bad_request(error):
         return jsonify(
-                        {'success': False,
-                         'error': 400, 'message': 'bad request'}), 400
+            {'success': False,
+             'error': 400, 'message': 'bad request'}), 400
 
     # No authorization error
     # authentication has not been provided
@@ -234,8 +231,8 @@ def create_app(test_config=None):
     @app.errorhandler(401)
     def unauthorized(error):
         return jsonify(
-                      {'success': False,
-                       'error': 401, 'message': 'unauthorized'}), 401
+            {'success': False,
+             'error': 401, 'message': 'unauthorized'}), 401
 
     # No permission error
     # Used to handle requests where permission missing for user
@@ -243,8 +240,8 @@ def create_app(test_config=None):
     @app.errorhandler(403)
     def forbidden(error):
         return jsonify(
-                        {'success': False,
-                         'error': 403, 'message': 'forbidden'}), 403
+            {'success': False,
+             'error': 403, 'message': 'forbidden'}), 403
 
     # Resource not found error
 
@@ -252,9 +249,9 @@ def create_app(test_config=None):
     def not_found(error):
         return (
             jsonify(
-                    {'success': False,
-                     'error': 404, 'message': 'resource not found'}), 404,
-                    )
+                {'success': False,
+                 'error': 404, 'message': 'resource not found'}), 404,
+        )
 
     # Unprocessable error
 
@@ -262,9 +259,9 @@ def create_app(test_config=None):
     def unprocessable(error):
         return (
             jsonify(
-                    {'success': False,
-                     'error': 422, 'message': 'unprocessable'}), 422,
-                    )
+                {'success': False,
+                 'error': 422, 'message': 'unprocessable'}), 422,
+        )
 
     # Internal server error
 
@@ -272,8 +269,8 @@ def create_app(test_config=None):
     def internal_server_error(error):
         print(error)
         return jsonify(
-                    {'success': False,
-                     'error': 500, 'message': 'internal server error'}), 500
+            {'success': False,
+             'error': 500, 'message': 'internal server error'}), 500
 
     @app.errorhandler(AuthError)
     def autherror(_ErR_):
