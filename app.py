@@ -1,23 +1,20 @@
-import os
+import os 
 import unittest
 from flask import Flask, request, abort, jsonify
-# from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
 import json
 from flask_cors import CORS
 from models import setup_db, Actor, Movie
 from auth import requires_auth, AuthError
-# from simplejson import dumps
 
 # create and configure the app
 
 
 def create_app(test_config=None):
     app = Flask(__name__)
+    app.config.from_pyfile('auth.py')
     setup_db(app)
-    # migrate = Migrate(app, db)
-    # CORS(app)
     cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
     @app.after_request
