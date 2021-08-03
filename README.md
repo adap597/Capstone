@@ -157,6 +157,8 @@ https://{{YOUR_DOMAIN}}/authorize?audience={{API_IDENTIFIER}}&response_type=toke
 
 ### Base URL
 
+https://udacfsnd.us.auth0.com/authorize?audience=Casting&response_type=token&client_id=nBEglxlDSNtkW33pVuNyFYpXhPdz6PzG&redirect_uri=https://casting-app-capstone.herokuapp.com/login-results
+
 https://git.heroku.com/casting-app-capstone.git
 
 ### Models
