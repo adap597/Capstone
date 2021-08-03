@@ -4,12 +4,12 @@ from flask import request, _request_ctx_stack
 from functools import wraps
 from jose import jwt
 from urllib.request import urlopen
-from config import AUTH0_DOMAIN, ALGORITHMS, API_AUDIENCE, CLIENT_ID
+import os
 
-AUTH0_DOMAIN = 'AUTH0_DOMAIN'
-ALGORITHMS = 'ALGORITHMS'
-API_AUDIENCE = 'API_AUDIENCE'
-CLIENT_ID = 'CLIENT_ID'
+AUTH0_DOMAIN = os.environ['AUTH0_DOMAIN']
+ALGORITHMS = [os.environ['ALGORITHMS']]
+API_AUDIENCE = os.environ['API_AUDIENCE']
+CLIENT_ID = os.environ['CLIENT_ID']
 
 
 def get_json_data(url):
